@@ -10,6 +10,10 @@ void Game::Reset()
 {
 	Console::SetWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	Console::CursorVisible(false);
+
+	gameOver = false;
+	playerWin = false;
+
 	paddle.width = 12;
 	paddle.height = 2;
 	paddle.x_position = 32;
@@ -37,6 +41,10 @@ void Game::Reset()
 		brick.y_position = 5;
 		brick.doubleThick = true;
 		brick.color = ConsoleColor::DarkGreen;
+
+		//Had an issue at the end regarding the ball, fixed it this way.
+		bricks.push_back(brick);
+		brickHits.push_back(0);
 	}
 }
 
@@ -66,8 +74,13 @@ bool Game::Update()
 	if (GetAsyncKeyState('R') & 0x1)
 		Reset();
 
-	ball.Update();
-	CheckCollision();
+	//Updated to stop updating on game end
+	if (!gameOver)
+	{
+		ball.Update();
+		CheckCollision();
+	}
+
 	return true;
 }
 
@@ -87,7 +100,7 @@ void Game::Render() const
 	{
 		brick.Draw();
 	}
-	Console::Lock(false);
+	
 
 	//Updated to both win and lose conditions
 	if (gameOver)
@@ -103,6 +116,7 @@ void Game::Render() const
 			std::cout << "Better luck next time. Press R to play again.";
 		}
 	}
+	Console::Lock(false); // moved down here to account for the new conditions.
 }
 
 void Game::CheckCollision()
@@ -110,7 +124,7 @@ void Game::CheckCollision()
 	// TODO #4 - Update collision to check all bricks
 
 	//Another loop!
-	for (int i = 0; i < bricks.size(); i++)
+	for (int i = static_cast<int>(bricks.size()) - 1; i >= 0; i--) //Another Another loop! Updated this time to go backwards since it's erasing bricks.
 	{
 		if (bricks[i].Contains(ball.x_position + ball.x_velocity, ball.y_position + ball.y_velocity)) //updated brick.Contains to bricks[i].Contains
 		{
