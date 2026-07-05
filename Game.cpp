@@ -88,6 +88,21 @@ void Game::Render() const
 		brick.Draw();
 	}
 	Console::Lock(false);
+
+	//Updated to both win and lose conditions
+	if (gameOver)
+	{
+		Console::SetCursorPosition(WINDOW_WIDTH / 2 - 15, WINDOW_HEIGHT / 2); //centers cursor
+
+		if (playerWin)
+		{
+			std::cout << "Good job! Press R to play again.";
+		}
+		else
+		{
+			std::cout << "Better luck next time. Press R to play again.";
+		}
+	}
 }
 
 void Game::CheckCollision()
@@ -128,4 +143,10 @@ void Game::CheckCollision()
 	}
 
 	// TODO #7 - If ball touches bottom of window, pause ball and display (render) defeat text with R to reset
+	if (ball.y_position >= WINDOW_HEIGHT - 1) // if lower than the window, then it's a loss. Check Render for loss text
+	{
+		ball.moving = false;
+		gameOver = true;
+		playerWin = false;
+	}
 }
