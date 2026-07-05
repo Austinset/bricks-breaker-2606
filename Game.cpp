@@ -20,12 +20,24 @@ void Game::Reset()
 	ResetBall();
 
 	// TODO #2 - Add this brick and 4 more bricks to the vector
-	brick.width = 10;
-	brick.height = 2;
-	brick.x_position = 0;
-	brick.y_position = 5;
-	brick.doubleThick = true;
-	brick.color = ConsoleColor::DarkGreen;
+	//The first thing I want to do, in case of any confliction, is clear the bricks prior to each iteration. 
+	bricks.clear();
+	brickHits.clear();
+	
+	//Then, to make this brick 5 of them, I'll add this loop.
+	for (int i = 0; i < 5; i++)
+	{
+		Box brick; //declared inside the loop to give a value to the vector
+		brick.width = 10;
+		brick.height = 2;
+		//Since I can't have them all spawn in the same location, the X position needs to be relative. This means it'll be i * a value.
+		//stdafx has a window width of 80, so it needs to split around that.
+		// 5 bricks, 10 wide, means 30 leftover spaces between them. 30 / 6 gaps = 5 spaces per. Thus the 'spacing' variable is made.
+		brick.x_position = (5 + (15*i));
+		brick.y_position = 5;
+		brick.doubleThick = true;
+		brick.color = ConsoleColor::DarkGreen;
+	}
 }
 
 void Game::ResetBall()
