@@ -81,8 +81,12 @@ void Game::Render() const
 	ball.Draw();
 
 	// TODO #3 - Update render to render all bricks
-	brick.Draw();
+	//just like task 2, it's now a loop utilizing the local object and running the function on it.
 
+	for (const Box& brick : bricks)
+	{
+		brick.Draw();
+	}
 	Console::Lock(false);
 }
 
